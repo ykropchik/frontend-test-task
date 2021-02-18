@@ -56,8 +56,12 @@ h1 {
     z-index: 10;
 }
 
-#load-screen {
+#load-screen,
+#success-wrap {
     position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: rgba(255, 255, 255, 0.5);
     top: 0;
     left: 0;
@@ -99,7 +103,16 @@ input {
     appearance: none;
     outline: none;
     font-size: 1.2rem;
-    color: #8b8b8b;
+}
+
+select.empty,
+input.empty {
+    color: #8b8b8b !important;
+}
+
+select.complete,
+input.complete {
+    color: #000;
 }
 
 select.invalid,
@@ -125,10 +138,6 @@ option:disabled {
     display: none;
 }
 
-#cities {
-    color: #000;
-}
-
 #date-time {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -139,7 +148,8 @@ label {
     color: #db001b;
 }
 
-#accept-btn {
+#accept-btn,
+#success-btn {
     display: block;
     height: 50px;
     width: 30%;
@@ -176,4 +186,23 @@ label {
     color: #1a76cb;
     outline: none;
     text-decoration: none;
+}
+
+#success {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    height: 40%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 16px 8px rgba(0, 0, 0, 0.19);
+}
+
+#success h1 {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #007E33;
 }

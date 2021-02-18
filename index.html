@@ -29,7 +29,7 @@
 
         <div id="load-screen" style="display: none;"></div>
 
-        <select id="cities">
+        <select id="cities" class="complete">
         </select>
 
         <div class="info">
@@ -39,23 +39,22 @@
         </div>
 
         <div id="date-time">
-            <select id="date">
+            <select id="date" class="empty">
                 <option value disabled selected>Дата</option>
             </select>
 
-            <select id="time" disabled>
+            <select id="time" class="empty" disabled>
                 <option value disabled selected>Время</option>
             </select>
         </div>
 
         <label for="date-time" id="invalid-date" style="display: none;">Пожалуйста, выберите дату</label>
         <label for="date-time" id="invalid-time" style="display: none;">Пожалуйста, выберите время</label>
-        <label for="date-time" id="invalid-date-time" style="display: none;">Пожалуйста, выберите дату и время</label>
 
-        <input id="number" placeholder="+7(___) ___-__-__">
+        <input id="number" class="empty" placeholder="+7(___) ___-__-__">
         <label for="number" id="invalid-number" style="display: none;">Пожалуйста, введите корректный телефон, иначе наши специалисты не смогут связаться с вами</label>
 
-        <input id="name" placeholder="Ваше имя">
+        <input id="name" class="empty" placeholder="Ваше имя">
         <label for="name" id="invalid-name" style="display: none;">Пожалуйста, укажите имя</label>
 
         <button id="accept-btn" disabled>Записаться</button>
@@ -64,6 +63,13 @@
             <span>
                 Нажимая "Записаться", я выражаю свое согласие с обработкой моих персональных данных в соответствии с принятой <a href="#">политикой конфиденциальности</a> и принимаю <a href="#">пользовательское соглашение</a> 
             </span>
+        </div>
+
+        <div id="success-wrap" style="display: none;">
+            <div id="success">
+                <h1>Ваша заявка отправлена, скора наши специалисты свяжутся с вами</h1>
+                <button id="success-btn">Понятно</button>
+            </div>
         </div>
     </div>
 

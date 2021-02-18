@@ -1,3 +1,5 @@
+let numberInput;
+let nameInput;
 let days = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
 let months = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'];
 let phoneMask = IMask.createMask({
@@ -7,31 +9,25 @@ let phoneMask = IMask.createMask({
 let freeDates = [];
 
 $(document).ready(function() {
-    getCitiesList((cities) => {
-        insertCities(cities);
-        insertInfo(cities[0]);
-        getDates(cities[0].id, (dates) => {
-            getFreeDates(dates);
-            insertDates();
-        });
-    });
-
+    init();
 
     // --- Number and name masked forms --- //
-    let numberInput = IMask($('#number')[0], phoneMask);
-    let nameInput = IMask($('#name')[0], {
+    numberInput = IMask($('#number')[0], phoneMask);
+    nameInput = IMask($('#name')[0], {
         mask: /^[а-яА-я]+$/
     });
 
     $('#number').on('focusin', function() {
         $(this).css({ 'color': '#000' });
         $('#invalid-number').hide();
-        $(this).removeClass('invalid');
+        $(this).removeClass();
+        $(this).addClass('complete');
     });
 
     $('#number').on('focusout', function() {
         if (numberInput.unmaskedValue.length !== 10) {
             $('#invalid-number').show();
+            $(this).removeClass();
             $(this).addClass('invalid');
         }
 
@@ -44,36 +40,42 @@ $(document).ready(function() {
     // --- Validation --- //
     $('#name').on('focusin', function() {
         $('#invalid-name').hide();
-        $(this).removeClass('invalid');
+        $(this).removeClass();
+        $(this).addClass('complete');
     });
 
     $('#name').on('focusout', function() {
         if (nameInput.unmaskedValue.length === 0) {
             $('#invalid-name').show();
+            $(this).removeClass();
             $(this).addClass('invalid');
         }
     });
 
     $('#date').on('focusin', function() {
         $('#invalid-date').hide();
-        $(this).removeClass('invalid');
+        $(this).removeClass();
+        $(this).addClass('complete');
     });
 
     $('#date').on('focusout', function() {
         if ($(this).val() === null) {
             $('#invalid-date').show();
+            $(this).removeClass();
             $(this).addClass('invalid');
         }
     });
 
     $('#time').on('focusin', function() {
         $('#invalid-time').hide();
-        $(this).removeClass('invalid');
+        $(this).removeClass();
+        $(this).addClass('complete');
     });
 
     $('#time').on('focusout', function() {
         if ($(this).val() === null) {
             $('#invalid-time').show();
+            $(this).removeClass();
             $(this).addClass('invalid');
         }
     });
@@ -95,9 +97,41 @@ $(document).ready(function() {
 
     $('#date').on('change', function() {
         insertTime($(this).val());
+        $('#time').removeClass();
+        $('#time').addClass('empty');
     });
     // --- --- //
+
+    // --- Button activation --- //
+    $('select, input').on('change', function() {
+        if ($('.empty, .invalid').length === 0) {
+            $('#accept-btn').prop('disabled', false);
+        } else {
+            $('#accept-btn').prop('disabled', true);
+        }
+    });
+    // --- --- //
+
+    $('#accept-btn').on('click', function() {
+        showLoadScreen();
+        setTimeout(showSuccess, 2000);
+    });
+
+    $('#success-btn').on('click', function() {
+        hideSuccess();
+    })
 })
+
+function init() {
+    getCitiesList((cities) => {
+        insertCities(cities);
+        insertInfo(cities[0]);
+        getDates(cities[0].id, (dates) => {
+            getFreeDates(dates);
+            insertDates();
+        });
+    });
+}
 
 function getCitiesList(callback) {
     $.ajax({
@@ -181,6 +215,15 @@ function insertDates() {
         let date = new Date(dateStr.split('-'));
         $('#date').append('<option value="' + dateStr + '">' + days[date.getDay()] + ', ' + date.getDate() + ' ' + months[date.getMonth()] + '</option>');
     });
+
+    $('#date').removeClass();
+    $('#date').addClass('empty');
+
+    $('#time').text('');
+    $('#time').append('<option value disabled selected>Время</option>');
+    $('#time').prop('disabled', true);
+    $('#time').removeClass();
+    $('#time').addClass('empty');
 }
 
 function insertTime(date) {
@@ -204,6 +247,38 @@ function hideLoadScreen() {
     $('#logo').removeClass('animation');
 }
 
-function showSuccess() {
+function clearForms() {
+    $('#cities').text('');
 
+    $('#date').text('');
+    $('#date').append('<option value disabled selected>Дата</option>');
+    $('#date').removeClass();
+    $('#date').addClass('empty');
+
+    $('#time').text('');
+    $('#time').append('<option value disabled selected>Время</option>');
+    $('#time').prop('disabled', true);
+    $('#time').removeClass();
+    $('#time').addClass('empty');
+
+    numberInput.unmaskedValue = '';
+    $('#number').removeClass();
+    $('#number').addClass('empty');
+
+    nameInput.unmaskedValue = '';
+    $('#name').removeClass();
+    $('#name').addClass('empty');
+
+    init();
+}
+
+function showSuccess() {
+    hideLoadScreen();
+    $('#success-wrap').show();
+}
+
+function hideSuccess() {
+    clearForms();
+    $('#accept-btn').prop('disabled', true);
+    $('#success-wrap').hide();
 }
