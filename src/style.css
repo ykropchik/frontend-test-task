@@ -1,0 +1,179 @@
+* {
+    box-sizing: border-box;
+    font-family: Arial, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", -apple-system, sans-serif;
+    font-size: 14px;
+    color: #000;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.main-wrap {
+    width: 40%;
+    margin: 3% 0;
+}
+
+#logo {
+    position: relative;
+    z-index: 10;
+}
+
+#logo.animation #circle_main {
+    display: none;
+}
+
+#logo.animation #circle_anim {
+    animation: 2s linear spinner infinite;
+}
+
+@keyframes spinner {
+    0% {
+        stroke-dashoffset: 0;
+        stroke-dasharray: 80% 20%;
+    }
+    50% {
+        stroke-dashoffset: 90%;
+        stroke-dasharray: 10% 90%;
+    }
+    100% {
+        stroke-dashoffset: 200%;
+        stroke-dasharray: 80% 20%;
+    }
+}
+
+h1 {
+    position: relative;
+    margin: 16px 0 32px 0;
+    font-size: 1.5rem;
+    z-index: 10;
+}
+
+#load-screen {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 24px 18px;
+}
+
+#phones a {
+    color: #1a76cb;
+    outline: none;
+    text-decoration: none;
+}
+
+select {
+    background-image: url('../assets/arrow.png');
+    background-repeat: no-repeat;
+    background-position: right 0px center;
+    background-size: 30px;
+    cursor: pointer;
+}
+
+select,
+input {
+    background-color: #e8e8e8;
+    height: 50px;
+    width: 100%;
+    padding: 7px 30px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 4px;
+    appearance: none;
+    outline: none;
+    font-size: 1.2rem;
+    color: #8b8b8b;
+}
+
+select.invalid,
+input.invalid,
+input.invalid::placeholder {
+    background-color: #fae5e8;
+    color: #db001b !important;
+}
+
+select:disabled {
+    cursor: not-allowed;
+}
+
+option {
+    margin: 10px 0;
+    outline: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #000;
+}
+
+option:disabled {
+    display: none;
+}
+
+#cities {
+    color: #000;
+}
+
+#date-time {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+}
+
+label {
+    color: #db001b;
+}
+
+#accept-btn {
+    display: block;
+    height: 50px;
+    width: 30%;
+    margin: 20px auto;
+    border-radius: 30px;
+    border: none;
+    outline: none;
+    background: #db001b;
+    color: #fff;
+    font-size: 1.25rem;
+    box-shadow: 0px 6px 6px 0px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+#accept-btn:disabled {
+    background: #8b8b8b;
+    color: #fff;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.footer {
+    margin-top: 10px;
+}
+
+.footer span {
+    color: #8b8b8b;
+    margin: 2px;
+    font-size: 0.75rem;
+}
+
+.footer a {
+    font-size: 0.75rem;
+    color: #1a76cb;
+    outline: none;
+    text-decoration: none;
+}
