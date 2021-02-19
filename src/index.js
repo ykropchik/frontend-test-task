@@ -14,7 +14,7 @@ $(document).ready(function() {
     // --- Number and name masked forms --- //
     numberInput = IMask($('#number')[0], phoneMask);
     nameInput = IMask($('#name')[0], {
-        mask: /^[а-яА-я]+$/
+        mask: /^[А-яA-z ]+$/
     });
 
     $('#number').on('focusin', function() {
@@ -83,6 +83,7 @@ $(document).ready(function() {
 
     // --- Update changed info --- // 
     $('#cities').on('change', function() {
+        $(this).blur();
         getCitiesList((cities) => {
             let city = cities.filter(city => {
                 return city.id === this.value;
@@ -96,9 +97,14 @@ $(document).ready(function() {
     })
 
     $('#date').on('change', function() {
+        $(this).blur();
         insertTime($(this).val());
         $('#time').removeClass();
         $('#time').addClass('empty');
+    });
+
+    $('#time').on('change', function() {
+        $(this).blur();
     });
     // --- --- //
 
@@ -112,14 +118,25 @@ $(document).ready(function() {
     });
     // --- --- //
 
+    // --- Simple router --- //
+    window.addEventListener('load', routing);
+    window.addEventListener('hashchange', routing);
+    // --- --- //
+
     $('#accept-btn').on('click', function() {
         showLoadScreen();
-        setTimeout(showSuccess, 2000);
+        writeOrder({
+            city: $('#cities option:selected').text(),
+            date: $('#time').val(),
+            tel: numberInput.value,
+            name: nameInput.value
+        });
+        setTimeout(showSuccess, 1000);
     });
 
     $('#success-btn').on('click', function() {
         hideSuccess();
-    })
+    });
 })
 
 function init() {
@@ -157,7 +174,7 @@ function insertCities(cities) {
 
 function insertInfo(info) {
     $('#address').text(info.address);
-    $('#phones').text('');
+    $('#phones').empty('');
 
 
     if (info.phones.length !== 0) {
@@ -208,7 +225,7 @@ function getDates(cityId, callback) {
 }
 
 function insertDates() {
-    $('#date').text('');
+    $('#date').empty();
     $('#date').append('<option value disabled selected>Дата</option>');
 
     Object.keys(freeDates).forEach(dateStr => {
@@ -219,7 +236,7 @@ function insertDates() {
     $('#date').removeClass();
     $('#date').addClass('empty');
 
-    $('#time').text('');
+    $('#time').empty();
     $('#time').append('<option value disabled selected>Время</option>');
     $('#time').prop('disabled', true);
     $('#time').removeClass();
@@ -227,7 +244,7 @@ function insertDates() {
 }
 
 function insertTime(date) {
-    $('#time').text('');
+    $('#time').empty();
     $('#time').append('<option value disabled selected>Время</option>');
 
     freeDates[date].forEach(time => {
@@ -248,14 +265,14 @@ function hideLoadScreen() {
 }
 
 function clearForms() {
-    $('#cities').text('');
+    $('#cities').empty();
 
-    $('#date').text('');
+    $('#date').empty();
     $('#date').append('<option value disabled selected>Дата</option>');
     $('#date').removeClass();
     $('#date').addClass('empty');
 
-    $('#time').text('');
+    $('#time').empty();
     $('#time').append('<option value disabled selected>Время</option>');
     $('#time').prop('disabled', true);
     $('#time').removeClass();
@@ -270,6 +287,44 @@ function clearForms() {
     $('#name').addClass('empty');
 
     init();
+}
+
+function writeOrder(info) {
+    localStorage.setItem(Object.entries(localStorage).length, JSON.stringify(info));
+}
+
+function insertOrders() {
+    $('#orders-table').empty();
+    Object.keys(localStorage).forEach(key => {
+        let order = JSON.parse(localStorage.getItem(key));
+        $('#orders-table').append(
+            `<div class="table-item" orderId="` + key + `"><span>` + order.city + `</span>
+                <span>` + order.date.split(' ')[0] + `</span>
+                <span>` + order.date.split(' ')[1] + `</span>
+                <span>` + order.name + `</span>
+                <span>` + order.tel + `</span>
+                <button class="del-btn" onClick=deleteOrder(this)>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#db001b" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                </button>
+            </div>`);
+    });
+
+}
+
+function deleteOrder(data) {
+    let elem = $(data).parent();
+    localStorage.removeItem(elem.attr('orderId'));
+    elem.remove();
+}
+
+function routing() {
+    if (window.location.hash === '#/orders') {
+        window.history.pushState({}, 'orders', window.location.pathname + '#/orders');
+        $('#orders-wrap').show();
+        insertOrders();
+    }
 }
 
 function showSuccess() {
